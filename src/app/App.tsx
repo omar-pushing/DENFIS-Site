@@ -23,7 +23,6 @@ export default function App() {
     const vis = parseFloat(visibility);
     const hum = parseFloat(humidity);
 
-    // Validate against backend parameter ranges
     if (temp < -60.0 || temp > 160.0) {
       setError("Temperature must be between -60°F and 160°F");
       return;
@@ -63,14 +62,18 @@ export default function App() {
       }
 
       const data = await response.json();
-      setPrediction(data.severity || data.prediction || "Unknown");
+      setTimeout(() => {
+        setIsLoading(false);
+        setPrediction(data.severity || data.prediction || "Unknown");
+      }, 1200);
     } catch (err) {
-      // Mock prediction for demo
+      // Mock prediction for demo when API is unavailable
       const mockSeverities = ["Low", "Medium", "High"];
       const randomIndex = Math.floor(Math.random() * mockSeverities.length);
-      setPrediction(mockSeverities[randomIndex]);
-    } finally {
-      setTimeout(() => setIsLoading(false), 1200);
+      setTimeout(() => {
+        setIsLoading(false);
+        setPrediction(mockSeverities[randomIndex]);
+      }, 1200);
     }
   };
 
@@ -189,6 +192,7 @@ export default function App() {
               onClick={handlePredict}
               disabled={!isFormValid || isLoading}
               className="relative w-full group"
+              type="button"
             >
               <div
                 className={`w-full py-5 rounded-xl font-semibold text-lg transition-all duration-300 ${

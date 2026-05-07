@@ -18,7 +18,8 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
         textColor: "text-emerald-400",
         label: "Low Severity Risk",
         description: "Environmental conditions indicate minimal accident probability. Road safety appears optimal.",
-        statusDot: "bg-emerald-500"
+        statusDot: "bg-emerald-500",
+        barWidth: "33%",
       };
     } else if (lower.includes("medium") || lower.includes("moderate") || lower === "2") {
       return {
@@ -28,7 +29,8 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
         textColor: "text-amber-400",
         label: "Moderate Severity Risk",
         description: "Environmental conditions suggest heightened caution. Accident risk is elevated above baseline.",
-        statusDot: "bg-amber-500"
+        statusDot: "bg-amber-500",
+        barWidth: "66%",
       };
     } else {
       return {
@@ -38,7 +40,8 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
         textColor: "text-red-400",
         label: "High Severity Risk",
         description: "Environmental conditions present significant accident probability. Maximum caution advised.",
-        statusDot: "bg-red-500"
+        statusDot: "bg-red-500",
+        barWidth: "100%",
       };
     }
   };
@@ -54,22 +57,14 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
           className="mt-8"
         >
           <div className="relative p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 backdrop-blur-xl overflow-hidden">
-            {/* Animated border glow */}
             <motion.div
               className="absolute inset-0 rounded-2xl"
               style={{
                 background: "linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.5), transparent)",
               }}
-              animate={{
-                x: ["-100%", "200%"],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
-
             <div className="relative flex flex-col items-center justify-center gap-5">
               <div className="relative">
                 <motion.div
@@ -105,31 +100,18 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
 
             return (
               <div className="relative p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 backdrop-blur-xl overflow-hidden">
-                {/* Glow effect */}
                 <motion.div
                   className="absolute inset-0 -z-10 blur-3xl opacity-30"
                   style={{ background: config.glowColor }}
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    opacity: [0.2, 0.3, 0.2],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 />
 
                 <div className="flex items-start gap-6">
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 180,
-                      damping: 15,
-                      delay: 0.1
-                    }}
+                    transition={{ type: "spring", stiffness: 180, damping: 15, delay: 0.1 }}
                     className="relative flex-shrink-0"
                   >
                     <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${config.gradient} flex items-center justify-center shadow-2xl`}>
@@ -138,14 +120,8 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
                     <motion.div
                       className="absolute inset-0 rounded-2xl"
                       style={{ background: `linear-gradient(to bottom right, ${config.glowColor}, transparent)` }}
-                      animate={{
-                        opacity: [0.5, 1, 0.5],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     />
                   </motion.div>
 
@@ -156,20 +132,11 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
                       transition={{ delay: 0.2 }}
                       className="flex items-center gap-3 mb-3"
                     >
-                      <h3 className={`${config.textColor}`}>
-                        {config.label}
-                      </h3>
+                      <h3 className={`${config.textColor}`}>{config.label}</h3>
                       <motion.div
                         className={`w-2 h-2 rounded-full ${config.statusDot}`}
-                        animate={{
-                          scale: [1, 1.3, 1],
-                          opacity: [1, 0.5, 1],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
+                        animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </motion.div>
 
@@ -182,7 +149,6 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
                       {config.description}
                     </motion.p>
 
-                    {/* Data visualization bar */}
                     <motion.div
                       initial={{ opacity: 0, scaleX: 0 }}
                       animate={{ opacity: 1, scaleX: 1 }}
@@ -193,9 +159,7 @@ export function PredictionCard({ severity, isLoading }: PredictionCardProps) {
                       <motion.div
                         className={`h-full bg-gradient-to-r ${config.gradient}`}
                         initial={{ width: "0%" }}
-                        animate={{
-                          width: lower.includes("low") ? "33%" : lower.includes("medium") ? "66%" : "100%"
-                        }}
+                        animate={{ width: config.barWidth }}
                         transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
                       />
                     </motion.div>
