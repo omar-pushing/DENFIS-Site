@@ -1,110 +1,136 @@
-# SafeDrive Analyzer
+# DENFIS — Accident Severity Prediction
 
-A modern web application that predicts accident severity based on weather conditions using Flask API integration.
-
-## Features
-
-- **Real-time Weather Analysis**: Input temperature, visibility, and humidity to assess road safety risks
-- **Smart Predictions**: Three-tier severity classification (Low, Medium, High)
-- **Intuitive UX**: Clean, accessible interface with helpful input validation
-- **Responsive Design**: Works seamlessly on all device sizes
-- **Smooth Animations**: Engaging micro-interactions and animated backgrounds
+A modern React web app that predicts road accident severity based on weather conditions (temperature, visibility, humidity) using a ML-powered backend.
 
 ## Tech Stack
 
-- **Frontend**: React 18 + TypeScript
+- **Frontend**: React 18 + TypeScript + Vite
 - **Styling**: Tailwind CSS v4
 - **Animations**: Motion (Framer Motion)
-- **Icons**: Lucide React
-- **Build Tool**: Vite
-- **Backend**: Flask API (separate repository)
+- **Icons**: Lucide React + MUI Icons
+- **UI Components**: shadcn/ui (Radix UI)
+- **Backend**: Python Flask API (separate deployment — see below)
 
-## Getting Started
+---
+
+## Project Structure
+
+```
+denfis-vercel/
+├── src/
+│   ├── app/
+│   │   ├── App.tsx                      # Main app component
+│   │   └── components/
+│   │       ├── AnimatedBackground.tsx   # Mouse-tracking gradient bg
+│   │       ├── InputField.tsx           # Animated numeric input
+│   │       ├── PredictionCard.tsx       # Result display card
+│   │       ├── figma/
+│   │       │   └── ImageWithFallback.tsx
+│   │       └── ui/                      # shadcn/ui components
+│   ├── main.tsx
+│   └── styles/
+│       ├── index.css
+│       ├── tailwind.css
+│       └── theme.css                    # CSS variables / dark theme
+├── index.html
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── vercel.json                          # Vercel deployment config
+├── .env.example                         # Environment variable template
+└── .gitignore
+```
+
+---
+
+## Local Development
 
 ### Prerequisites
+- Node.js 18+
 
-- Node.js 18+ or pnpm
-- Your Flask API running (or update API URL)
+### Setup
 
-### Installation
+```bash
+# Install dependencies
+npm install
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+# Copy env template
+cp .env.example .env
 
-3. Create a `.env` file from the example:
-   ```bash
-   cp .env.example .env
-   ```
+# Edit .env — set your Flask API URL
+# VITE_API_URL=https://your-flask-api.com/predict
 
-4. Update the `VITE_API_URL` in `.env` to point to your Flask API endpoint
-
-5. Start the development server:
-   ```bash
-   pnpm run dev
-   ```
-
-## Deployment to Vercel
-
-### Quick Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=YOUR_REPO_URL)
-
-### Manual Deployment
-
-1. Install Vercel CLI:
-   ```bash
-   npm i -g vercel
-   ```
-
-2. Login to Vercel:
-   ```bash
-   vercel login
-   ```
-
-3. Deploy:
-   ```bash
-   vercel
-   ```
-
-4. Add environment variable in Vercel dashboard:
-   - Go to your project settings
-   - Navigate to "Environment Variables"
-   - Add `VITE_API_URL` with your Flask API endpoint
-
-### Build Command
-
-Vercel will automatically detect Vite and use:
-- **Build Command**: `vite build`
-- **Output Directory**: `dist`
-
-## API Integration
-
-The app expects your Flask API to accept POST requests at `/predict` with the following structure:
-
-**Request:**
-```json
-{
-  "temperature": 32.0,
-  "visibility": 5.0,
-  "humidity": 65.0
-}
+# Start dev server
+npm run dev
 ```
 
-**Response:**
-```json
-{
-  "severity": "Low"
-}
+The app falls back to mock predictions if the API is unreachable, so it works offline for UI development.
+
+---
+
+## Deploying to Vercel
+
+### One-click (after pushing to GitHub)
+
+1. Push this repo to GitHub
+2. Go to [vercel.com](https://vercel.com) → Import Project
+3. Select your repo — Vercel auto-detects Vite
+4. Add environment variable:
+   - **Name**: `VITE_API_URL`
+   - **Value**: `https://your-flask-api-url.com/predict`
+5. Deploy ✅
+
+### CLI deploy
+
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
 ```
 
-The `severity` field should return one of: `"Low"`, `"Medium"`, or `"High"`
+Set the env var in the Vercel dashboard under **Project → Settings → Environment Variables**.
 
-## Environment Variables
+---
 
-- `VITE_API_URL`: Your Flask API endpoint URL (default: `http://localhost:5000/predict`)
+## Backend API (Flask)
+
+The frontend calls `VITE_API_URL` (default: `http://localhost:5000/predict`).
+
+**POST** `/predict`
+
+Request:
+```json
+{ "temperature": 32.0, "visibility": 5.0, "humidity": 65.0 }
+```
+
+Response:
+```json
+{ "severity": "Low" }
+```
+
+`severity` must be one of: `"Low"`, `"Medium"`, `"High"`
+
+The Python backend requires:
+```
+numpy==1.26.4
+scikit-learn==1.4.2
+flask
+flask-cors
+```
+
+> Deploy the Flask API to [Railway](https://railway.app), [Render](https://render.com), or [Fly.io](https://fly.io), then set the URL in Vercel env vars.
+
+---
+
+## Input Ranges
+
+| Parameter   | Min    | Max    |
+|-------------|--------|--------|
+| Temperature | -60 °F | 160 °F |
+| Visibility  | 0 mi   | 10 mi  |
+| Humidity    | 0 %    | 100 %  |
+
+---
 
 ## License
 
