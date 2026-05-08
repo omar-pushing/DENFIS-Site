@@ -43,7 +43,7 @@ export default function App() {
     setPrediction(null);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/predict";
+      const apiUrl = import.meta.env.VITE_API_URL || "/api/predict";
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -67,13 +67,8 @@ export default function App() {
         setPrediction(data.severity || data.prediction || "Unknown");
       }, 1200);
     } catch (err) {
-      // Mock prediction for demo when API is unavailable
-      const mockSeverities = ["Low", "Medium", "High"];
-      const randomIndex = Math.floor(Math.random() * mockSeverities.length);
-      setTimeout(() => {
-        setIsLoading(false);
-        setPrediction(mockSeverities[randomIndex]);
-      }, 1200);
+      setIsLoading(false);
+      setError("Unable to reach prediction API. Please try again.");
     }
   };
 
